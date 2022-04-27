@@ -3,10 +3,10 @@ import mongoose from 'mongoose';
 import { IUser } from '../interfaces/user';
 import UserSchema from '../schema/user';
 
-async function getUser(email: string, password: string): Promise<IUser> {
+async function getUser(fields:{email: string, password?: string}): Promise<IUser> {
 
     const User = mongoose.model<IUser>("User", UserSchema);
-    return User.findOne({ email: email });
+    return User.findOne({ ...fields });
 }
 
 

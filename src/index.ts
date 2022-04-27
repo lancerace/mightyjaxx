@@ -20,3 +20,9 @@ server.listen(process.env.PORT || 4200, async () => {
 })
 
 server.use("/api", MainController);
+
+server.use('/', (err, req, res, next) => {
+
+    if (err.includes('duplicate key error'))
+        res.status(400).send({ message: 'it already exist. please use different value' });
+})

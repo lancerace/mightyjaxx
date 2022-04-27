@@ -1,5 +1,8 @@
 export interface IProduct {
     sku: string;
-    title: string;
+    title: {
+        type: string;
+        unique:any;
+    }
     imageUrl: string;
 }
