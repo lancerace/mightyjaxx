@@ -12,6 +12,7 @@ server.use(json());
 server.use(urlencoded({ extended: true }))
 server.use('*',cors());
 
+
 // Add headers before the routes are defined
 /*
 server.use(function (req, res, next) {
