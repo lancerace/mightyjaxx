@@ -3,8 +3,7 @@
 
 API deployed url is https://mighty-jaxx-web.herokuapp.com/ . 
 
-if api is not working for the first time, heroku is in **sleep mode** as i am using the free version. 
-please try to trigger the api again.
+image is uploaded to s3 bucket. returning with s3 presigned url to generate image frontend.
 
 # Available Routes
 
