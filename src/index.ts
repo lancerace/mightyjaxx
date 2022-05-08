@@ -15,6 +15,7 @@ server.use(urlencoded({ extended: true }))
 // Add headers before the routes are defined
 server.use(function (req, res, next) {
 
+    
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
 
