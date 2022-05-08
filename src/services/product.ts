@@ -1,11 +1,13 @@
 import mongoose from "mongoose"
-import { IProduct } from "../interfaces/product";
+import { IProduct,UploadURL } from "../interfaces";
 import ProductSchema from "../schema/product"
 import short from 'short-uuid';
+import AWSUtil from '../utils/aws';
+
 import { UpdateResult, DeleteResult } from "mongodb";
-async function addProduct(title: string, imageUrl: any):Promise<IProduct> {
+async function addProduct(title: string, fileName: string, fileType:any): Promise<IProduct> {
     const Product = mongoose.model<IProduct>("Product", ProductSchema);
-    const product = new Product({ sku:short.generate(), title, imageUrl });
+    const product = new Product({ sku:short.generate(), title, fileName, fileType});
     return product.save();
 }
 

@@ -1,13 +1,23 @@
 import express from 'express';
 import { UpdateResult, DeleteResult } from "mongodb";
-import { IProduct } from '../interfaces/product';
+import { IProduct, UploadURL } from '../interfaces/product';
 import ProductService from '../services/product';
+import fs from 'fs';
+const multer = require('multer');
+const upload = multer();
 const router: express.Router = express.Router();
+import AWSUtil from '../utils/aws';
 
 router.get('/', async (req: express.Request, res: express.Response, next) => {
     try {
         const { limit, skip } = req.query;
-        const products: IProduct[] = await ProductService.getProducts(limit, skip);
+        let products: IProduct[] = await ProductService.getProducts(limit, skip);
+
+        for (var i = 0; i < products.length; i++) {
+            const url = await AWSUtil.generateS3ObjectPresignedURL(`${UploadURL.PRODUCT}/${products[i].fileName}`);
+            products[i].fileUrl= url;
+        }
+
         return (products.length > 0) ? res.json({ success: true, products }) : res.json({ success: false });
     } catch (err) {
         next(err.message);
@@ -24,10 +34,10 @@ router.get('/:sku', async (req: express.Request, res: express.Response, next) =>
     }
 });
 
-router.post('/', async (req: express.Request, res: express.Response, next) => {
+router.post('/', upload.single("file"), async (req: express.Request, res: express.Response, next) => {
     try {
-        const { title, imageUrl } = req.body;
-        const product: IProduct = await ProductService.addProduct(title, imageUrl);
+        const product: IProduct = await ProductService.addProduct(req.body.title, req.file.originalname, req.file.mimetype);
+        await AWSUtil.uploadImage(req.file.buffer,`image`,req.file.originalname); 
         return (product) ? res.status(201).send({ success: true }) : res.json({ success: false })
     } catch (err) {
         next(err.message);

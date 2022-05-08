@@ -4,5 +4,11 @@ export interface IProduct {
         type: string;
         unique:any;
     }
-    imageUrl: string;
+    fileType: string;
+    fileName: string;
+    fileUrl:string; 
+}
+
+export enum UploadURL {
+    PRODUCT = 'image'
 }
